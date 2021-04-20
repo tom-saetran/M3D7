@@ -36,20 +36,22 @@
       Visualize on a Google Map plugin all the users (using lat & lng)
     --></head>
     <body>
-        <input type="button" value="Sort Asc/Desc" onclick="sortStuff()" />
+        <input type="button" value="Sort Asc/Desc" onclick="sortStuff(fetchedData)" />
         <div id="card-container" class="container"></div>
 
         <script>
-            const sortStuff = () => {
-                const parent = document.getElementById("card-container")
-
+            let sortUp = true
+            const sortStuff = data => {
                 let tempArray = []
-
-                console.log(tempArray)
-                for (const child of parent.children) {
-                    tempArray.push(child)
+                for (const child of data) tempArray.push(child)
+                const sorted = tempArray.sort((a, b) => a.name.localeCompare(b.name))
+                if (sortUp) {
+                    sortUp = false
+                    createAllCards(tempArray)
+                } else {
+                    sortUp = true
+                    createAllCards(tempArray.reverse())
                 }
-                tempArray.sort((a, b) => (a.name > b.name ? 1 : -1))
             }
 
             const fetchedData = [
@@ -316,32 +318,12 @@
                 return addressArray
             }
 
-            const createAllCards = data => data.map(item => createCard(item))
+            const createAllCards = data => {
+                document.getElementById("card-container").innerHTML = ""
+                data.map(item => createCard(item))
+            }
 
             const createCard = data => {
-                /*{
-                "id": 1,
-                "name": "Leanne Graham",
-                "username": "Bret",
-                "email": "Sincere@april.biz",
-                "address": {
-                "street": "Kulas Light",
-                "suite": "Apt. 556",
-                "city": "Gwenborough",
-                "zipcode": "92998-3874",
-                "geo": {
-                    "lat": "-37.3159",
-                    "lng": "81.1496"
-                }
-                },
-                "phone": "1-770-736-8031 x56442",
-                "website": "hildegard.org",
-                "company": {
-                "name": "Romaguera-Crona",
-                "catchPhrase": "Multi-layered client-server neural-net",
-                "bs": "harness real-time e-markets"
-                }
-            }*/
                 let parent = document.getElementById("card-container")
                 const template = `<div class="card" style="width: 18rem;">
                             <div class="card-body">
